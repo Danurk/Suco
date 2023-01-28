@@ -1,18 +1,15 @@
 import discord
 from discord.ext import commands
 import youtube_dl
+import asyncio
 
-# Inicializa o bot
 bot = commands.Bot(command_prefix='!', intents=discord.Intents.all())
 
-# Comando para tocar uma música do YouTube
 @bot.command()
 async def play(ctx, url):
-    # Cria uma nova conexão de voz
     voice_channel = ctx.author.voice.channel
     vc = await voice_channel.connect()
 
-    # Usa a biblioteca youtube_dl para baixar e reproduzir a música
     ydl_opts = {
         'format': 'bestaudio/best',
         'postprocessors': [{
@@ -20,12 +17,19 @@ async def play(ctx, url):
             'preferredcodec': 'mp3',
             'preferredquality': '192',
         }],
+        'no_warnings': True,
+        'quiet': True,
+        'no_playlist': True,
+        'duration': True
     }
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=False)
         vc.play(discord.FFmpegPCMAudio(info['url']))
         vc.source = discord.PCMVolumeTransformer(vc.source)
         vc.source.volume = 0.5
+        
+    await asyncio.sleep(info['duration'])
+    await vc.disconnect()
 
 # Inicia o bot
 bot.run('O_TOKEN_VAI_AQUI')
