@@ -28,6 +28,6 @@ async def play(ctx, url):
         vc.source.volume = 0.5
 
 # Inicia o bot
-bot.run('MTA2ODU4Mzc2NjI5NTA1MjM5OQ.GCFbTu.T5JM4G4uzRalTNt7s1FmgPZDcyWE-9FdO5A18Y')
+bot.run('O_TOKEN_VAI_AQUI')
 
 
